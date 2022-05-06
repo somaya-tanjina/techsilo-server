@@ -41,6 +41,29 @@ async function run() {
         res.send(product)
       })
 
+// Add single item
+      app.post('/additem', async(req, res) => {
+        const item = req.body;
+        const result = await productCollection.insertOne(item);
+        res.send(result);
+//console.log(result);
+      })
+
+
+
+
+
+
+      // Delete single Data
+
+      app.delete("/inventory/:id", async (req, res) => {
+        const id = req.params.id;
+        const querry = { _id: ObjectId(id) };
+        const deletedItem = await productCollection.deleteOne(querry)
+        res.send(deletedItem)
+        console.log(deletedItem);
+      });
+
     } finally {
         // await client.close();
     }
