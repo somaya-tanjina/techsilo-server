@@ -45,14 +45,23 @@ async function run() {
 
         // get data from database step-1
 
-        app.get("/products", async (req, res) => {
+        app.get("/products", async (req, res, next) => {
             const email = req.query.email;
             //console.log(email);
             if (req.query.email) {
+                const authHeader = req.headers.authorization;
+                if (!authHeader) {
+                    return res
+                        .status(401)
+                        .send({ message: "unauthenticated access" });
+                }
+
+                console.log("inside verify", authHeader);
                 const query = { email: req.query.email };
                 const cursor = productCollection.find(query);
                 const products = await cursor.toArray();
                 res.send(products);
+                next();
             } else {
                 const query = {};
                 const cursor = productCollection.find(query);
