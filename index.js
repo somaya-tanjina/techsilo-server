@@ -29,10 +29,21 @@ async function run() {
         // get data from database step-1
 
         app.get("/products", async (req, res) => {
-            const query = {};
-            const cursor = productCollection.find(query);
-            const products = await cursor.toArray();
-            res.send(products);
+
+            const email = req.query.email;
+          console.log(email);
+          if (req.query.email) {
+              const query = { email: req.query.email };
+              const cursor = productCollection.find(query);
+              const products = await cursor.toArray();
+              res.send(products);
+          } else {
+              const query = {};
+              const cursor = productCollection.find(query);
+              const products = await cursor.toArray();
+              res.send(products);
+          }
+
         });
 
         //get single data by id
@@ -62,7 +73,7 @@ async function run() {
             const updateDoc = {
                 $set: { quantity: updatedItem.quantity },
             };
-          console.log(updatedItem);
+            console.log(updatedItem);
             const result = await productCollection.updateOne(
                 filter,
                 updateDoc,
@@ -70,6 +81,7 @@ async function run() {
             );
             res.send(result);
         });
+
 
         // Delete single Data
 
