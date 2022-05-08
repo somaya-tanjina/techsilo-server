@@ -55,13 +55,15 @@ async function run() {
                         .status(401)
                         .send({ message: "unauthenticated access" });
                 }
-
-                console.log("inside verify", authHeader);
+                const token = authHeader.split(" ")[1];
+                
                 const query = { email: req.query.email };
                 const cursor = productCollection.find(query);
                 const products = await cursor.toArray();
                 res.send(products);
                 next();
+
+
             } else {
                 const query = {};
                 const cursor = productCollection.find(query);
